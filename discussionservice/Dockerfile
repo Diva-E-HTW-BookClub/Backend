@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 # Expose the default port for the server
-EXPOSE 3000
+EXPOSE 3001
 
 # Run the server when the container is started
 CMD ["nodemon", "index.js"]
