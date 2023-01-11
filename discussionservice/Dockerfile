@@ -13,6 +13,8 @@ COPY . .
 # Expose the default port for the server
 EXPOSE 3001
 
+ENV GENERATE_SOURCEMAP false
+
 # Run the server when the container is started
 CMD ["nodemon", "index.js"]
 
