@@ -15,6 +15,9 @@ EXPOSE 3002
 
 ENV GENERATE_SOURCEMAP false
 
+ENV PORT = 3002
+ENV FIREBASE_API_KEY = "AIzaSyDarZyJqdfwiqwwsHMnzHqm5IPwHgeaUQQ"
+
 # Run the server when the container is started
 CMD ["npm", "run", "dev"]
 
