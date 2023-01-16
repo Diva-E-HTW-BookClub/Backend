@@ -10,7 +10,7 @@ const router: Express = express();
 /** Logging */
 router.use(cors())
 
-router.use(morgan('dev'));
+router.use(morgan('start'));
 /** Parse the request */
 router.use(express.urlencoded({ extended: false }));
 /** Takes care of JSON data */

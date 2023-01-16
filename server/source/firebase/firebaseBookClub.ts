@@ -63,7 +63,7 @@ type BookClub = {
   owner: string;
 };
 
-async function createBookClubDocument(data: BookClub, headers:any) {
+async function createBookClubDocument(data: BookClub) {
   const doc = await addDoc(collection(firebaseDB, "bookClubs"), data);
   return doc.id;
 }

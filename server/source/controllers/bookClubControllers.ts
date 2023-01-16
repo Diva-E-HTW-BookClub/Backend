@@ -1,13 +1,14 @@
 /** source/controllers/posts.ts */
 import { Request, Response, NextFunction } from 'express';
+import { singInUser } from '../firebase/firebaseAuth';
 import { addMember, createBookClubDocument, deleteBookClubDocument, getBookClubDocument, removeMember, searchBookClubDocuments, updateBookClubDocument } from '../firebase/firebaseBookClub';
 import { firebaseDB } from '../firebase/firebaseConfig';
 
 
 const createBookClub = async (req: Request, res: Response, next: NextFunction) => {
     let data = req.body
-    let headers = req.headers
-    let result = await createBookClubDocument(data, headers) 
+
+    let result = await createBookClubDocument(data) 
     return res.status(200).json({
         result
     })
@@ -25,6 +26,7 @@ const getBookClub = async (req: Request, res: Response, next: NextFunction) => {
 const updateBookClub = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body
     const bookClubId = req.query.bookClubId;
+    
     let result = null
 
     if (bookClubId) {
