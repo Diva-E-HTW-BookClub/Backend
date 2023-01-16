@@ -13,11 +13,13 @@ COPY . .
 # Expose the default port for the server
 EXPOSE 3002
 
+LABEL version="1.0"
+
 ENV GENERATE_SOURCEMAP false
 
 ENV PORT = 3002
 ENV FIREBASE_API_KEY = "AIzaSyDarZyJqdfwiqwwsHMnzHqm5IPwHgeaUQQ"
 
 # Run the server when the container is started
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
 
