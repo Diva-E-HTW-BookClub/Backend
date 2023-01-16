@@ -96,7 +96,7 @@ async function deleteDiscussionDocument(
   );
 
   var commentDocuments = await getDocs(commentsQuery);
-  commentDocuments.forEach((doc) => {
+  commentDocuments.forEach((doc: any) => {
     deleteDoc(doc.ref);
   });
 }

@@ -1,11 +1,13 @@
 /** source/controllers/posts.ts */
 import { Request, Response, NextFunction } from 'express';
 import { addMember, createBookClubDocument, deleteBookClubDocument, getBookClubDocument, removeMember, searchBookClubDocuments, updateBookClubDocument } from '../firebase/firebaseBookClub';
+import { firebaseDB } from '../firebase/firebaseConfig';
 
 
 const createBookClub = async (req: Request, res: Response, next: NextFunction) => {
     let data = req.body
-    let result = await createBookClubDocument(data)
+    let headers = req.headers
+    let result = await createBookClubDocument(data, headers) 
     return res.status(200).json({
         result
     })

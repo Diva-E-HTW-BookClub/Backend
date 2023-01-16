@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   addDoc,
   collection,
@@ -62,7 +63,7 @@ type BookClub = {
   owner: string;
 };
 
-async function createBookClubDocument(data: BookClub) {
+async function createBookClubDocument(data: BookClub, headers:any) {
   const doc = await addDoc(collection(firebaseDB, "bookClubs"), data);
   return doc.id;
 }
