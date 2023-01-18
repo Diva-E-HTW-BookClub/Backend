@@ -4,8 +4,9 @@
   "description": "",
   "main": "source/server.ts",
   "scripts": {
-    "dev": "nodemon source/server.ts",
-    "build": "rm -rf build/ && prettier --write source/ && tsc"
+    "start": "nodemon source/server.ts",
+    "build": "tsc --build",
+    "postbuild": "copy package*.json build && cd build && npm i"
   },
   "keywords": [],
   "author": "",

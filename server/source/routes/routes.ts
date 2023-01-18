@@ -53,7 +53,7 @@ routes.delete('/bookClub/discussion/comment', commentController.deleteComment);
 //socket.io
 routes.get('/join', (req, res, next) => {
     return res.status(200).json({
-        data : "hello :)"
+        data : "This is the Join page!"
     });
 })
 

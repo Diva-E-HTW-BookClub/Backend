@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/5db92bb4-132d-4091-86af-9c5547e52feb/AppServices/subscriptions/5db92bb4-132d-4091-86af-9c5547e52feb/resourceGroups/api-service-group/providers/Microsoft.Web/sites/divae-api-service",
+    "appService.deploySubpath": "."
+}

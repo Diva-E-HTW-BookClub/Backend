@@ -11,13 +11,13 @@ RUN npm install
 COPY . .
 
 # Expose the default port for the server
-EXPOSE 3002
+EXPOSE 80
 
 LABEL version="1.0"
 
 ENV GENERATE_SOURCEMAP false
 
-ENV PORT = 3002
+ENV PORT = 80
 ENV FIREBASE_API_KEY = "AIzaSyDarZyJqdfwiqwwsHMnzHqm5IPwHgeaUQQ"
 
 # Run the server when the container is started
