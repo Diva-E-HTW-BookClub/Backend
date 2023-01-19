@@ -11,8 +11,9 @@ import {
   import { firebaseDB } from "./firebaseConfig";
 
 async function createCommentDocument(bookClubId: string, discussionId: string, data: any) {
+    console.log("here")
     var res = await addDoc(collection(firebaseDB, "bookClubs", bookClubId, "discussions", discussionId, "comments"), data);
-  }
+}
 
 async function updateCommentDocument(bookClubId: string, discussionId: string, commentId:string, data:any) {
   const commentDocument = doc(firebaseDB, "bookClubs", bookClubId, "discussions", discussionId, "comments", commentId);

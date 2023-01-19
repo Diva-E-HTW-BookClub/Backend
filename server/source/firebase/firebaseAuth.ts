@@ -20,4 +20,8 @@ const singInUser = async (token: any) => {
 
 }
 
-export {singInUser}
+function checkAuth(req: any) {
+  return req.headers.FRONTEND_AUTH_KEY == process.env.FRONTED_AUTH_KEY
+}
+
+export {singInUser, checkAuth}
