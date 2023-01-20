@@ -1,5 +1,5 @@
 # Use the official Python image as the base image
-FROM node
+FROM node:alpine
 
 COPY package.json .
 COPY package-lock.json .
@@ -11,7 +11,7 @@ RUN npm install
 COPY . .
 
 # Expose the default port for the server
-EXPOSE 3001
+EXPOSE 81
 
 ENV GENERATE_SOURCEMAP false
 

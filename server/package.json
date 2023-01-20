@@ -4,7 +4,7 @@
   "description": "",
   "main": "source/server.ts",
   "scripts": {
-    "start": "nodemon source/server.ts",
+    "start": "ts-node source/server.ts",
     "build": "tsc --build",
     "postbuild": "copy package*.json build && cd build && npm i"
   },

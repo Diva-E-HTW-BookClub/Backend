@@ -10,7 +10,7 @@ const router: Express = express();
 /** Logging */
 router.use(cors())
 
-router.use(morgan('start'));
+router.use(morgan('combined'));
 /** Parse the request */
 router.use(express.urlencoded({ extended: false }));
 /** Takes care of JSON data */
@@ -44,4 +44,4 @@ router.use((req, res, next) => {
 /** Server */
 const httpServer = http.createServer(router);
 const PORT: any = process.env.PORT ?? 80;
-httpServer.listen(PORT, () => console.log(`The server is running on port ${PORT}`));
+httpServer.listen(PORT, "0.0.0.0", () => console.log(`The server is running on port ${PORT}`));
