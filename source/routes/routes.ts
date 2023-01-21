@@ -19,6 +19,11 @@ routes.delete('/bookClub', bookClubController.deleteBookClub);
 routes.post('/bookClub/addMember', bookClubController.addClubMember)
 routes.post('/bookClub/removeMember', bookClubController.removeClubMember)
 
+//Expects userId
+routes.get('/bookClub/byModerator', bookClubController.getClubsByModerator)
+routes.get('/bookClub/byJoinedMember', bookClubController.getClubsByMember)
+routes.get('/bookClub/fullClubByMember', bookClubController.getFullClubsByMember)
+
 //Expects bookClubId and resourceId in params and data in body
 routes.get('/bookClub/resource', resourceController.getResource);
 routes.post('/bookClub/resource', resourceController.createResource);
@@ -35,6 +40,7 @@ routes.delete('/bookClub/discussion', discussionController.deleteDiscussion);
 routes.post('/bookClub/discussion/addParticipant', discussionController.addParticipant);
 routes.post('/bookClub/discussion/removeParticipant', discussionController.removeParticipant);
 
+
 //Expects bookClubId, discussionId in params and data in body
 routes.get('/bookClub/discussion/agenda', discussionController.getAgenda);
 routes.post('/bookClub/discussion/agenda', discussionController.createAgenda);
@@ -50,10 +56,11 @@ routes.post('/bookClub/discussion/comment', commentController.createComment);
 routes.patch('/bookClub/discussion/comment', commentController.updateComment);
 routes.delete('/bookClub/discussion/comment', commentController.deleteComment);
 
+
 //socket.io
 routes.get('/test', (req, res, next) => {
     return res.status(200).json({
-        data : "Service is running!"
+        data : "Service is running! " + process.env.FIREBASE_API_KEY
 
     });
 })

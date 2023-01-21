@@ -9,7 +9,9 @@ import {
   getDocs,
   query,
   updateDoc,
+  where,
 } from "firebase/firestore";
+import { getBookClubDocument } from "./firebaseBookClub";
 
 import { firebaseDB } from "./firebaseConfig";
 

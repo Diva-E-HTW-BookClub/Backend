@@ -7,6 +7,12 @@ COPY package-lock.json .
 # Install the dependencies
 RUN npm install 
 
+# Set the NODE_ENV variable
+ENV NODE_ENV=dev
+
+# Copy the appropriate .env file based on the NODE_ENV variable
+COPY .env.${NODE_ENV} .env
+
 # Copy the server code to the working directory
 COPY . .
 
@@ -14,10 +20,6 @@ COPY . .
 EXPOSE 80
 
 LABEL version="1.0"
-
-ENV PORT = 80
-ENV FIREBASE_API_KEY = AIzaSyDarZyJqdfwiqwwsHMnzHqm5IPwHgeaUQQ
-ENV FRONTEND_AUTH_KEY = ae9bcd3c-0113-4953-8525-125e27db185e
 
 # Run the server when the container is started
 CMD ["npm", "run", "start"]
