@@ -154,13 +154,18 @@ const getAgenda = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateAgenda = async (req: Request, res: Response, next: NextFunction) => {
     if (checkAuth(req)) {
-        const data = req.body
         const discussionId = req.query.discussionId
         const bookClubId = req.query.bookClubId
+        const amountOfChapter = req.query.amountOfChapter
+        const elapsedTimes = req.query.elapsedTimes
+        const names = req.query.names
+        const timeLimits = req.query.timeLimit
+        const maxParticipants = req.query.maxParticipants
+        const saveArchive = req.query.saveArchive
 
         let result = null
         if (bookClubId && discussionId) {
-            result = await updateDiscussionAgenda(String(bookClubId), String(discussionId), data)
+            result = await updateDiscussionAgenda(String(bookClubId), String(discussionId), Number(amountOfChapter), elapsedTimes, names, timeLimits, Number(maxParticipants), Boolean(saveArchive))
         }
         return res.status(200).json({
             result

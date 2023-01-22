@@ -20,12 +20,6 @@ import { firebaseDB } from "./firebaseConfig";
 import { deleteDiscussionDocument } from "./firebaseDiscussions";
 import { deleteResourceDocument } from "./firebaseResource";
 
-type Comment = {
-  text: string;
-  passage: string;
-  commentId: string;
-  owner: string;
-};
 type Book = {
   title: string;
   authors: string[];
@@ -286,7 +280,9 @@ async function getFullBookClubsByMember(userId: string){
   let returnArray: any = []
   for await (const bookClub of resultsArray){
     await getBookClubDocument(bookClub.id).then((fullBookClub) => { 
-      returnArray.push(fullBookClub)
+      if (fullBookClub) {
+        returnArray.push(fullBookClub)
+      }
     })
   }
   return returnArray;
@@ -306,4 +302,4 @@ export {
   getFullBookClubsByMember,
 };
 
-export type { BookClub, Discussion, Comment };
+export type { BookClub, Discussion };

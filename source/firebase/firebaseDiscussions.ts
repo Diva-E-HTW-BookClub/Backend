@@ -67,6 +67,7 @@ async function getDiscussionDocument(bookClubId: string, discussionId: string) {
       participants: discussionData.participants,
       agenda: discussionData.agenda,
       moderator: discussionData.moderator,
+      isArchived: discussionData.isArchived
     };
   }
 }
@@ -175,7 +176,12 @@ async function getDiscussionAgenda(bookClubId: string, discussionId: string) {
 async function updateDiscussionAgenda(
   bookClubId: string,
   discussionId: string,
-  data: string
+  amountOfChapter: number,
+  elapsedTimes: any,
+  names: any,
+  timeLimits: any,
+  maxParticipants: number,
+  saveArchive: boolean
 ) {
   const discussionDocument = doc(
     firebaseDB,
@@ -184,9 +190,15 @@ async function updateDiscussionAgenda(
     "discussions",
     discussionId
   );
-  const agenda_update_data = { agenda: data };
-
-  updateDoc(discussionDocument, agenda_update_data);
+  updateDoc(discussionDocument, {agenda:{}})
+  for(let i = 0; i < amountOfChapter; i++){
+    updateDoc(discussionDocument, {agenda:arrayUnion({elapsedTime: elapsedTimes[i], name: names[i], timeLimit: timeLimits[i]})})
+    
+  }
+  if(saveArchive == true){
+    updateDoc(discussionDocument, {isArchived: true})
+  }
+  updateDoc(discussionDocument, {maxParticipants: maxParticipants})
 }
 
 async function deleteDiscussionAgenda(

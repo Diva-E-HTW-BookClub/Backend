@@ -32,8 +32,9 @@ async function getCommentDocument(bookClubId:string, discussionId:string, commen
 
   if (commentData) {
     return {
+      id: commentData.id,
       passage: commentData.passage,
-      quote: commentData.quote,
+      moderator: commentData.moderator,
       text: commentData.text,
       photo: commentData.photo
     }
