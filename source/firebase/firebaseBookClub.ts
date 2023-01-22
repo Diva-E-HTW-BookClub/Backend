@@ -55,14 +55,38 @@ type BookClub = {
   discussions: Discussion[];
   resources: Resource[];
   owner: string;
+  keywords: string[];
 };
 
+// generate all possible prefixes of a given string
+function generatePrefixes(str: string): string[] {
+  let prefixes: string[] = [];
+  let strLowerCase = str.toLowerCase();
+  for (let i = 1; i <= str.length; i++) {
+    prefixes.push(strLowerCase.substring(0, i));
+  }
+  return prefixes;
+}
+
+// generates keywords for search by club name, book title and book authors
+function generateKeywords(bookClub: any): string[] {
+  let keywords: string[] = [];
+  keywords.push(...generatePrefixes(bookClub.name));
+  keywords.push(...generatePrefixes(bookClub.book.title));
+  bookClub.book.authors.forEach((author: string) => {
+    keywords.push(...generatePrefixes(author));
+  });
+  return keywords;
+}
+
 async function createBookClubDocument(data: BookClub) {
+  data.keywords = generateKeywords(data);
   const doc = await addDoc(collection(firebaseDB, "bookClubs"), data);
   return doc.id;
 }
 
 async function updateBookClubDocument(bookClubId: string, data: any) {
+  data.keywords = generateKeywords(data);
   const bookClubDocument = doc(firebaseDB, "bookClubs", String(bookClubId));
 
   updateDoc(bookClubDocument, data);
@@ -153,36 +177,20 @@ async function getBookClubDocument(bookClubId: string) {
   }
 }
 
-// serch book clubs by their name, book title
-// and where members contains and not contains given member id
-// (needed to find clubs where user is a member and where not)
+// serch book clubs by their name, book title, author
+// and where members list does not contain given member id
+// (needed to find clubs where user is not a member)
 async function searchBookClubDocuments(
-  filter: string,
   inputText: string,
   memberId: string,
-  includeMember: boolean,
   resultsLimit: number,
   lastBookClubId?: string
 ) {
-  let fieldPath;
-  if (filter === "name") {
-    fieldPath = new FieldPath("name");
-  } else if (filter === "book") {
-    // field path is more complex for nested documents
-    // to search by title field within the book field we need to use this FieldPath
-    fieldPath = new FieldPath("book", "title");
-  } else {
-    console.log(`unknown field ${filter}`);
-    return [];
-  }
   let queryConstraints = [
-    // https://stackoverflow.com/a/61516548
-    // search documents in which the field by field path starts with input text
-    where(fieldPath, ">=", inputText),
-    where(fieldPath, "<=", inputText + "~"),
-    orderBy(fieldPath),
-    limit(resultsLimit),
+    orderBy("name"),
+    limit(resultsLimit)
   ];
+
   if (lastBookClubId != null) {
     // https://firebase.google.com/docs/firestore/query-data/query-cursors#use_a_document_snapshot_to_define_the_query_cursor
     // this is needed for pagination
@@ -192,29 +200,21 @@ async function searchBookClubDocuments(
     let lastBookClubDocumentResult = await getDoc(lastBookClubDocument);
     queryConstraints.push(startAfter(lastBookClubDocumentResult));
   }
-  if (includeMember) {
-    // find documents where user is in the list of members
-    // to search by members and club name/book title a corresponding index is needed
-    // https://console.firebase.google.com/project/diva-e-htw-bookclub/firestore/indexes
+  if (inputText != null && inputText !== "") {
     queryConstraints.push(
-      where("members", "array-contains", memberId)
-    );
-    let q = query(collection(firebaseDB, "bookClubs"), ...queryConstraints);
-    // returns documents from bookClubs collection matching all query constraints
-    var results = await getDocs(q);
-    return results.docs.map(docToBookClub);
-  } else {
-    // find all documents from bookClubs collection matching the search query
-    // regardles of their members
-    let q = query(collection(firebaseDB, "bookClubs"), ...queryConstraints);
-    var results = await getDocs(q);
-    return (
-      results.docs
-        .map(docToBookClub)
-        // remove clubs where our user is a member
-        .filter((bookClub) => !bookClub.members.includes(memberId))
+      where("keywords", "array-contains", inputText.toLowerCase())
     );
   }
+  // find all documents from bookClubs collection matching the search query
+  // regardles of their members
+  let q = query(collection(firebaseDB, "bookClubs"), ...queryConstraints);
+  var results = await getDocs(q);
+  return (
+    results.docs
+      .map(docToBookClub)
+      // remove clubs where our user is a member
+      .filter((bookClub) => !bookClub.members.includes(memberId))
+  );
 }
 
 // convert document from firestore to book club
@@ -230,6 +230,7 @@ function docToBookClub(doc: any) {
     discussions: data.discussions,
     resources: data.resources,
     owner: data.owner,
+    keywords: data.keywords
   };
 }
 
