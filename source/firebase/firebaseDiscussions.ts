@@ -14,6 +14,7 @@ import {
 import { getBookClubDocument } from "./firebaseBookClub";
 
 import { firebaseDB } from "./firebaseConfig";
+import { getDistanceInMinutes } from "./helpers";
 
 // Expected data format
 // {
@@ -152,8 +153,21 @@ async function addDiscussionAgenda(
     discussionId
   );
   const agenda_update_data = { agenda: data };
-
+  if(data == ""){
+    let discussionDocResult = await getDoc(discussionDocument);
+    let discussionData = discussionDocResult.data();
+    if (discussionData) {
+    const agenda_update_data2 = { agenda: [{elapsedTime: 0, name: "Total Discussion", timeLimit: getDistanceInMinutes(
+      discussionData.startTime,
+      discussionData.endTime
+    )*60 }]};
+    
+    updateDoc(discussionDocument, agenda_update_data2);
+    }
+  }
+  else{
   updateDoc(discussionDocument, agenda_update_data);
+  }
 }
 
 async function getDiscussionAgenda(bookClubId: string, discussionId: string) {
