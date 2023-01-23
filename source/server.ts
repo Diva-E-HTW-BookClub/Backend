@@ -62,6 +62,7 @@ function createInMap(nameOfDiscussionId: any){
 const io = new Server(apiServer, {
     
     cors: {
+        origin: "0.0.0.0",
         methods: ["GET", "POST"], 
     }
 })
