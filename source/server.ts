@@ -4,7 +4,7 @@ import express, { Express, response } from 'express';
 import morgan from 'morgan';
 import { routes } from './routes/routes';
 import cors from 'cors';
-import socketIO from 'socket.io';
+import { Server } from 'socket.io';
 
 const router: Express = express();
 const discussionMap = new Map();
@@ -49,8 +49,9 @@ router.use((req, res, next) => {
 });
 
 /** Server */
-const httpServer = http.createServer(router);
+const apiServer = http.createServer(router);
 const PORT: any = process.env.PORT ?? 80;
+const SOCKET_IO_PORT: any = process.env.SOCKET_IO_PORT ?? 2000;
 
 
 // Add socket.io websocket
@@ -58,7 +59,12 @@ function createInMap(nameOfDiscussionId: any){
     discussionMap.set(nameOfDiscussionId, [[true, true],-1,-1]);
 }
 
-const io: any = httpServer
+const io = new Server(apiServer, {
+    
+    cors: {
+        methods: ["GET", "POST"], 
+    }
+})
 
 io.on('connection', (socket: any) => {
     console.log(`User Connected: ${socket.id}`);
@@ -92,6 +98,16 @@ io.on('connection', (socket: any) => {
         progressSumServer = data;
         console.log(progressSumServer)
         io.in(data.discussionId).emit("receive_sum_time", data)
+    });
+
+    socket.on("send_all_Current_Data", (data: any) => {
+        discussionMap.set(data.discussionId,[[data.emitStates], [discussionMap.get(data.discussionId)[1]],discussionMap.get(data.discussionId)[2],discussionMap.get(data.discussionId)[3]])
+        discussionMap.set(data.discussionId,[[discussionMap.get(data.discussionId)[0]],[data.emitTimes] ,discussionMap.get(data.discussionId)[2],discussionMap.get(data.discussionId)[3]])
+        discussionMap.set(data.discussionId,[[discussionMap.get(data.discussionId)[0]], discussionMap.get(data.discussionId)[1], [data.emitSum],discussionMap.get(data.discussionId)[3]])
+        playingSateServer = data.emitStates;
+        progressTimesServer = data.emitTimes;
+        progressSumServer = data.emitSum;
+        io.in(data.discussionId).emit("receive_all_Data", data)
     });
 
     socket.on("send_all_Data", (data: any) => {
@@ -135,4 +151,5 @@ io.on('connection', (socket: any) => {
 
 
 // Start the server
-httpServer.listen(PORT, "0.0.0.0", () => console.log(`The server is running on port ${PORT}`));
+io.listen(SOCKET_IO_PORT)
+apiServer.listen(PORT, "0.0.0.0", () => console.log(`The server is running on port ${PORT}`));

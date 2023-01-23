@@ -204,15 +204,15 @@ async function updateDiscussionAgenda(
     "discussions",
     discussionId
   );
-  updateDoc(discussionDocument, {agenda:{}})
+
+  await updateDoc(discussionDocument, { agenda: {} })
   for(let i = 0; i < amountOfChapter; i++){
-    updateDoc(discussionDocument, {agenda:arrayUnion({elapsedTime: elapsedTimes[i], name: names[i], timeLimit: timeLimits[i]})})
-    
+    await updateDoc(discussionDocument, { "agenda" : arrayUnion({elapsedTime: elapsedTimes[i], name: names[i], timeLimit: timeLimits[i]})})
   }
   if(saveArchive == true){
-    updateDoc(discussionDocument, {isArchived: true})
+    await updateDoc(discussionDocument, {isArchived: true})
   }
-  updateDoc(discussionDocument, {maxParticipants: maxParticipants})
+  await updateDoc(discussionDocument, {maxParticipants: maxParticipants})
 }
 
 async function deleteDiscussionAgenda(
