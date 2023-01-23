@@ -73,33 +73,25 @@ const deleteBookClub = async (req: Request, res: Response, next: NextFunction) =
     }
 };
 
-// filter, memberId, includeMember and resultsLimit are mandatory. inputText and lastBookClubId are optional
+// memberId and resultsLimit are mandatory. inputText and lastBookClubId are optional
 const searchBookClubs = async (req: Request, res: Response, next: NextFunction) => {
     if (checkAuth(req)) {
-        const filter = req.query.filter
         const inputText = req.query.inputText
         const memberId = req.query.memberId
         const resultsLimit = req.query.resultsLimit
-        const lastBookClubId = req.query.lastBookClubId
-
-        let includeMember: boolean = false
-        if (req.query.includeMember === "true") {
-            includeMember = true
-        }
+        const lastBookClubId = req.query.lastBookClubId as string
 
         let result = null
-        if (filter && memberId && resultsLimit) {
-
+        if (memberId && resultsLimit) {
             let inputTextString = String()
             if (inputText){
                 inputTextString = String(inputText)
             }
-
-            if (lastBookClubId != undefined) {
-                result = await searchBookClubDocuments(String(filter), inputTextString, String(memberId), includeMember, Number(resultsLimit), String(lastBookClubId))
-            } else {
-                result = await searchBookClubDocuments(String(filter), inputTextString, String(memberId), includeMember, Number(resultsLimit))
+            let lastBookClubIdString = null;
+            if (lastBookClubId){
+                lastBookClubIdString = String(lastBookClubId)
             }
+            result = await searchBookClubDocuments(inputTextString, String(memberId), Number(resultsLimit), lastBookClubId)
         }
 
         return res.status(200).json({
