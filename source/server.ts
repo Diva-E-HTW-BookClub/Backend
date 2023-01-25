@@ -12,6 +12,10 @@ const discussionMap = new Map();
 var playingSateServer = [true, true];
 var progressTimesServer= [0, 0];
 var progressSumServer = -1;
+var maxRoomSize: any = 0;
+var currentRoom: any = 0;
+var roomSize: any = 0;
+
 
 
 /** Logging */
@@ -58,11 +62,10 @@ const SOCKET_IO_PORT: any = process.env.SOCKET_IO_PORT ?? 2000;
 function createInMap(nameOfDiscussionId: any){
     discussionMap.set(nameOfDiscussionId, [[true, true],-1,-1]);
 }
-
+console.log("creating server")
 const io = new Server(apiServer, {
     
     cors: {
-        origin: "0.0.0.0",
         methods: ["GET", "POST"], 
     }
 })
@@ -70,13 +73,18 @@ const io = new Server(apiServer, {
 io.on('connection', (socket: any) => {
     console.log(`User Connected: ${socket.id}`);
     
-    socket.on("join_discussion_room", (data: any) => {
+    socket.on("join_discussion_room", (data:any) => {
         if(!(discussionMap.has(data))){
             createInMap(data)
         }
         console.log(discussionMap.get(data)[0]);
         console.log(discussionMap.get(data))
         socket.join(data);
+        currentRoom = data;
+        // console.log("numbers in room: "+ io.sockets.adapter.rooms.get(data).size)
+        roomSize = io.sockets.adapter?.rooms.get(data)?.size
+
+        io.in(data).emit("changeParticipantCount", roomSize);
     });
 
     socket.on("send_playButton", (data: any) => {
@@ -148,9 +156,15 @@ io.on('connection', (socket: any) => {
 
         }
     })
+    socket.on("disconnect", () => {
+        //var roomOfSocket = socket.rooms
+        //var room =  Object.keys(socket.rooms).filter(item => item!=socket.id);
+        console.log("Room of socket: " + currentRoom); // undefined
+        var rommSizeAfterLeaving = roomSize -1;
+        io.in(currentRoom).emit("changeParticipantCount", rommSizeAfterLeaving);
+      });
 });
 
 
 // Start the server
-io.listen(SOCKET_IO_PORT)
 apiServer.listen(PORT, "0.0.0.0", () => console.log(`The server is running on port ${PORT}`));

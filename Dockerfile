@@ -22,5 +22,5 @@ EXPOSE 80
 LABEL version="1.0"
 
 # Run the server when the container is started
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "start"]
 
