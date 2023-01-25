@@ -1,6 +1,6 @@
 /** source/controllers/posts.ts */
 import { Request, Response, NextFunction } from 'express';
-import { checkAuth } from '../firebase/firebaseAuth';
+import { checkAuth, getUsername } from '../firebase/firebaseAuth';
 import { getDiscussionComments } from '../firebase/firebaseComments';
 import { addDiscussionAgenda, addDiscussionParticipant, createDiscussionDocument, deleteDiscussionAgenda, deleteDiscussionDocument, getDiscussionAgenda, getDiscussionDocument, removeDiscussionParticipant, updateDiscussionAgenda, updateDiscussionDocument } from '../firebase/firebaseDiscussions';
 
@@ -210,6 +210,13 @@ const getAllComments = async (req: Request, res: Response, next: NextFunction) =
         let result = null
         if (bookClubId && discussionId) {
             result = await getDiscussionComments(String(bookClubId), String(discussionId))
+            if (result != null) {
+                result = await Promise.all(result.map(async (comment: any) => {
+                    const username = await getUsername(comment.moderator);
+                    comment.username = username;
+                    return comment;
+                }));
+            }
         }
         return res.status(200).json({
             result

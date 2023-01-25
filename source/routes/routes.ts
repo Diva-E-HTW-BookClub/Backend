@@ -4,6 +4,7 @@ import bookClubController from '../controllers/bookClubControllers';
 import discussionController from '../controllers/discussionControllers';
 import commentController from '../controllers/commentControllers';
 import resourceController from '../controllers/resourceControllers';
+import profileController from '../controllers/profileControllers';
 const routes = express.Router();
 
 // Expects filter, inputText, memberId, includeMember, resultsLimit and lastBookClubId in params
@@ -56,6 +57,9 @@ routes.post('/bookClub/discussion/comment', commentController.createComment);
 routes.patch('/bookClub/discussion/comment', commentController.updateComment);
 routes.delete('/bookClub/discussion/comment', commentController.deleteComment);
 
+//Expects userId
+routes.get('/profile/username', profileController.getProfileUsername);
+routes.post('/profile/username', profileController.saveProfileUsername);
 
 //socket.io
 routes.get('/test', (req, res, next) => {
