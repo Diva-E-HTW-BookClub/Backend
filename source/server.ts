@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { routes } from './routes/routes';
 import cors from 'cors';
 import { Server } from 'socket.io';
+var bodyParser = require('body-parser');
 
 const router: Express = express();
 const discussionMap = new Map();
@@ -17,6 +18,8 @@ var currentRoom: any = 0;
 var roomSize: any = 0;
 
 
+router.use(bodyParser.json({limit: '2mb'}));
+router.use(bodyParser.urlencoded({limit: '2mb', extended: true}));
 
 /** Logging */
 router.use(cors())

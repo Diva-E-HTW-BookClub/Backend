@@ -36,7 +36,8 @@ async function getCommentDocument(bookClubId:string, discussionId:string, commen
       passage: commentData.passage,
       moderator: commentData.moderator,
       text: commentData.text,
-      photo: commentData.photo
+      photo: commentData.photo,
+      username: null
     }
   }
 }
@@ -54,6 +55,8 @@ async function getDiscussionComments(bookClubId:string ,discussionId: string) {
         quote: data.quote,
         passage: data.passage,
         moderator: data.moderator,
+        photo: data.photo,
+        username: null
     }
     });
 }
