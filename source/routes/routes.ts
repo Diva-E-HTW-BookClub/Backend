@@ -60,11 +60,12 @@ routes.delete('/bookClub/discussion/comment', commentController.deleteComment);
 //Expects userId
 routes.get('/profile/username', profileController.getProfileUsername);
 routes.post('/profile/username', profileController.saveProfileUsername);
+routes.patch('/profile/username', profileController.updateUserData);
 
 //socket.io
 routes.get('/test', (req, res, next) => {
     return res.status(200).json({
-        data : "Service is running! " + process.env.FIREBASE_API_KEY
+        data : "Service is running! "
 
     });
 })

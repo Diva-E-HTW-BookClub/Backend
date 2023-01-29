@@ -1,5 +1,5 @@
 import {getAuth, signInWithCustomToken } from "firebase/auth"
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { auth, firebaseDB } from "./firebaseConfig";
 
 const singInUser = async (token: any) => {
@@ -31,9 +31,16 @@ async function saveUser(userId: string, username: string) {
   });
 }
 
+async function updateUser(userId: string, username: string) {
+  console.log("updating")
+  return updateDoc(doc(firebaseDB, "users", userId), {
+    username: username
+  });
+}
+
 async function getUsername(userId: string) {
   let document = await getDoc(doc(firebaseDB, "users", userId));
   return document.data()?.username;
 }
 
-export {singInUser, checkAuth, getUsername, saveUser}
+export {singInUser, checkAuth, getUsername, saveUser, updateUser}
