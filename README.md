@@ -1,3 +1,8 @@
+# Executing Population Command
+You can execute the following command which will create dummy data inside of the App. This includes a few Bookclubs filled with discussions, Comments and resources
+``ts-node source/scripts/populateBookClubs.ts``
+
+
 # Deploying the API service
 
 ### Requires docker to be installed and running!
