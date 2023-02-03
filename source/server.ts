@@ -80,8 +80,8 @@ io.on('connection', (socket: any) => {
         if(!(discussionMap.has(data))){
             createInMap(data)
         }
-        console.log(discussionMap.get(data)[0]);
-        console.log(discussionMap.get(data))
+        // console.log(discussionMap.get(data)[0]);
+        // console.log(discussionMap.get(data))
         socket.join(data);
         currentRoom = data;
         // console.log("numbers in room: "+ io.sockets.adapter.rooms.get(data).size)
@@ -93,22 +93,21 @@ io.on('connection', (socket: any) => {
     socket.on("send_playButton", (data: any) => {
         discussionMap.set(data.discussionId,[[data.emitStates], [discussionMap.get(data.discussionId)[1]],discussionMap.get(data.discussionId)[2]])
         playingSateServer = data;
-        console.log(playingSateServer)
-        console.log("HIER SCHAU MAL" + discussionMap.get(data.discussionId)[0])
+        // console.log(playingSateServer)
+        // console.log("HIER SCHAU MAL" + discussionMap.get(data.discussionId)[0])
         io.in(data.discussionId).emit("receive_playButton", data)
     });
 
     socket.on("send_time", (data: any) => {
         discussionMap.set(data.discussionId,[[discussionMap.get(data.discussionId)[0]],[data.emitTimes] ,discussionMap.get(data.discussionId)[2]])
         progressTimesServer = data;
-        console.log(progressTimesServer)
+        // console.log(progressTimesServer)
         io.in(data.discussionId).emit("receive_time", data)
     });
-
     socket.on("send_sum_time", (data: any) => {
         discussionMap.set(data.discussionId,[[discussionMap.get(data.discussionId)[0]], discussionMap.get(data.discussionId)[1], [data.emitSum]])
         progressSumServer = data;
-        console.log(progressSumServer)
+        // console.log(progressSumServer)
         io.in(data.discussionId).emit("receive_sum_time", data)
     });
 
@@ -132,26 +131,26 @@ io.on('connection', (socket: any) => {
         discussionMap.set(data.discussionId,[[discussionMap.get(data.discussionId)[0]], discussionMap.get(data.discussionId)[1], [data.emitSum]])
         progressSumServer = data.emitSum;
         
-        console.log("states:  "+ playingSateServer)
-        console.log("timesServer: " + progressTimesServer)
-        console.log("Sum: " + progressSumServer)
+        // console.log("states:  "+ playingSateServer)
+        // console.log("timesServer: " + progressTimesServer)
+        // console.log("Sum: " + progressSumServer)
 
         // Update Synchronisation
         io.in(data.discussionId).emit("receive_playButton", data)
         io.in(data.discussionId).emit("receive_time", data)
-        io.in(data.discussionId).emit("rreceive_sum_time", data)
+        io.in(data.discussionId).emit("receive_sum_time", data)
 
     });
     socket.on("request_data", (data: any) => {
       
         if(progressSumServer != -1){
-            console.log("state im loop: " + playingSateServer)
-            console.log("times im loop: " + progressTimesServer)
-            console.log("sum im loop: " + progressSumServer)
+            // console.log("state im loop: " + playingSateServer)
+            // console.log("times im loop: " + progressTimesServer)
+            // console.log("sum im loop: " + progressSumServer)
 
-            console.log("state im loop SERVER" + discussionMap.get(data.discussionId)[0]);
-            console.log("times im loop SERVER" + discussionMap.get(data.discussionId)[1]);
-            console.log("sum im loop SERVER" + discussionMap.get(data.discussionId)[2]);
+            // console.log("state im loop SERVER" + discussionMap.get(data.discussionId)[0]);
+            // console.log("times im loop SERVER" + discussionMap.get(data.discussionId)[1]);
+            // console.log("sum im loop SERVER" + discussionMap.get(data.discussionId)[2]);
 
             io.in(data.discussionId).emit("receive_playButtonStart", discussionMap.get(data.discussionId)[0]);
             io.in(data.discussionId).emit("receive_timeStart", discussionMap.get(data.discussionId)[1]);
@@ -159,10 +158,19 @@ io.on('connection', (socket: any) => {
 
         }
     })
+    socket.on("leaveRoom", (data:any) => {
+        console.log("leaving room: " + data.discussionId)
+        socket.leave(data.discussionId)
+    })
+    socket.on("new_connection_from_elsewhere", (data:any) =>{
+        console.log("reload_request")
+        io.in(data.discussionId).emit("reload_page", data);
+
+    })
     socket.on("disconnect", () => {
         //var roomOfSocket = socket.rooms
         //var room =  Object.keys(socket.rooms).filter(item => item!=socket.id);
-        console.log("Room of socket: " + currentRoom); // undefined
+        // console.log("Room of socket: " + currentRoom); // undefined
         var rommSizeAfterLeaving = roomSize -1;
         io.in(currentRoom).emit("changeParticipantCount", rommSizeAfterLeaving);
       });

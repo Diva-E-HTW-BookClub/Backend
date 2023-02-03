@@ -205,6 +205,7 @@ async function updateDiscussionAgenda(
     discussionId
   );
 
+  console.log("updating: " + bookClubId, discussionId)
   await updateDoc(discussionDocument, { agenda: {} })
   for(let i = 0; i < amountOfChapter; i++){
     await updateDoc(discussionDocument, { "agenda" : arrayUnion({elapsedTime: elapsedTimes[i], name: names[i], timeLimit: timeLimits[i]})})
