@@ -68,7 +68,8 @@ async function getDiscussionDocument(bookClubId: string, discussionId: string) {
       participants: discussionData.participants,
       agenda: discussionData.agenda,
       moderator: discussionData.moderator,
-      isArchived: discussionData.isArchived
+      isArchived: discussionData.isArchived,
+      maxParticipants: discussionData.maxParticipants
     };
   }
 }
