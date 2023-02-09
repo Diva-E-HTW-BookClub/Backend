@@ -305,6 +305,7 @@ export {
   getBookClubsByModerator,
   getBookClubsByJoinedMember,
   getFullBookClubsByMember,
+  generateKeywords,
 };
 
 export type { BookClub, Discussion };
